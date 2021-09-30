@@ -10,7 +10,7 @@
             "from sqlalchemy.orm import Session",
             "",
             "from lib.safe_string import safe_string",
-            "from plataforma_web.${2:v1}.${3:plural}.models import ${4:Modelo}",
+            "from direcciones.${2:v1}.${3:plural}.models import ${4:Modelo}",
             "",
             "",
             "def get_${3:plural}(",

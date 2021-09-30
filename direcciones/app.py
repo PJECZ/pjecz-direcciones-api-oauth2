@@ -11,6 +11,7 @@ from fastapi_pagination import add_pagination
 from config.settings import ACCESS_TOKEN_EXPIRE_MINUTES
 from lib.database import get_db
 
+from direcciones.v1.estados.paths import estados
 from direcciones.v1.roles.paths import roles
 from direcciones.v1.usuarios.paths import usuarios
 
@@ -23,6 +24,7 @@ app = FastAPI(
     description="API de Direcciones",
 )
 
+app.include_router(estados)
 app.include_router(roles)
 app.include_router(usuarios)
 
