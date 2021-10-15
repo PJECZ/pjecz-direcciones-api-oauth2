@@ -129,4 +129,6 @@ dmypy.json
 .pyre/
 
 # Propios
+instance/settings.py
+seed/
 .bashrc
