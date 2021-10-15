@@ -8,12 +8,11 @@ Base de datos
 import os
 import click
 
-from sqlalchemy import select, delete
+from lib.database import Base, engine, SessionLocal
 
-from lib.database import SessionLocal
-from direcciones.v1.estados.models import Estado
-from direcciones.v1.roles.models import Rol
-from direcciones.v1.usuarios.models import Usuario
+from cli.commands.alimentar_roles import alimentar_roles
+from cli.commands.alimentar_usuarios import alimentar_usuarios
+from cli.commands.alimentar_estados import alimentar_estados
 
 entorno_implementacion = os.environ.get("DEPLOYMENT_ENVIRONMENT", "develop").upper()
 
@@ -29,14 +28,9 @@ def inicializar():
     if entorno_implementacion == "PRODUCTION":
         click.echo("PROHIBIDO: No se inicializa porque este es el servidor de producción.")
         return
-    # Borrar estados
-    with SessionLocal() as session:
-        session.begin()
-        session.query(Estado).delete()
-        session.query(Usuario).delete()
-        session.query(Rol).delete()
-        session.commit()
-    click.echo("Pendiente inicializar.")
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
+    click.echo("Inicializado.")
 
 
 @click.command()
@@ -45,6 +39,10 @@ def alimentar():
     if entorno_implementacion == "PRODUCTION":
         click.echo("PROHIBIDO: No se alimenta porque este es el servidor de producción.")
         return
+    db = SessionLocal()
+    alimentar_roles(db)
+    alimentar_usuarios(db)
+    alimentar_estados(db)
     click.echo("Pendiente alimentar.")
 
 
