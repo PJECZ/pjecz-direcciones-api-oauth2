@@ -13,6 +13,7 @@ from lib.database import Base, engine, SessionLocal
 from cli.commands.alimentar_roles import alimentar_roles
 from cli.commands.alimentar_usuarios import alimentar_usuarios
 from cli.commands.alimentar_estados import alimentar_estados
+from cli.commands.alimentar_municipios import alimentar_municipios
 
 entorno_implementacion = os.environ.get("DEPLOYMENT_ENVIRONMENT", "develop").upper()
 
@@ -39,10 +40,11 @@ def alimentar():
     if entorno_implementacion == "PRODUCTION":
         click.echo("PROHIBIDO: No se alimenta porque este es el servidor de producción.")
         return
-    db = SessionLocal()
-    alimentar_roles(db)
-    alimentar_usuarios(db)
-    alimentar_estados(db)
+    with SessionLocal() as db:
+        alimentar_roles(db)
+        alimentar_usuarios(db)
+        alimentar_estados(db)
+        alimentar_municipios(db)
     click.echo("Pendiente alimentar.")
 
 

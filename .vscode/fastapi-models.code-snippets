@@ -41,15 +41,20 @@
         "prefix": "fmodels_foreing_key",
         "body": [
             "# Clave foránea",
-            "${1:columna}_id = db.Column(",
-            "\t'${1:columna}',",
-            "\tdb.Integer,",
-            "\tdb.ForeignKey('${2:tablas}.id'),",
-            "\tindex=True,",
-            "\tnullable=False",
-            ")",
+            "${1:clave_foranea}_id = Column(Integer, ForeignKey('${2:tabla_clave_foranea}.id'), index=True, nullable=False)",
+            "${1:clave_foranea} = relationship('${3:Clase_clave_foranea}', back_populates='${4:plural_esta_clase}')",
             ""
         ],
         "description": "Clave foránea"
+    },
+    "Flask models child": {
+        "scope": "python",
+        "prefix": "fmodels_hijo",
+        "body": [
+            "# Hijos",
+            "${1:plural_hijos} = relationship('${2:Clase_hijo}', back_populates='${3:singular_esta_clase}')",
+            ""
+        ],
+        "description": "Hijo"
     }
 }
