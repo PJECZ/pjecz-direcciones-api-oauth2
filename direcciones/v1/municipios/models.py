@@ -22,7 +22,7 @@ class Municipio(Base, UniversalMixin):
     estado = relationship('Estado', back_populates='municipios')
 
     # Columnas
-    nombre = Column(String(256), unique=True, nullable=False)
+    nombre = Column(String(256), nullable=False)
 
     # Hijos
     codigos_postales = relationship('CodigoPostal', back_populates='municipio')

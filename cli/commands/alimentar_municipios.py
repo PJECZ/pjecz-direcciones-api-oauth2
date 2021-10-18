@@ -29,19 +29,23 @@ def alimentar_municipios(db: Session):
         return
     click.echo("Alimentando municipios...")
     contador = 0
+    estado = None
+    municipio = None
     with open(ruta, encoding="iso8859-1") as puntero:
         rows = csv.DictReader(puntero, delimiter="|")
-        acumulados = []
         for row in rows:
-            nombre = safe_string(row["D_mnpio"])
-            if nombre not in acumulados:
-                db.add(
-                    Municipio(
+            estado_str = safe_string(row["d_estado"])
+            if estado is None or estado_str != estado.nombre:
+                estado = db.query(Estado).filter_by(nombre=estado_str).first()
+            municipio_str = safe_string(row["D_mnpio"])
+            if municipio is None or municipio_str != municipio.nombre:
+                municipio = db.query(Municipio).filter_by(nombre=municipio_str).first()
+                if municipio is None:
+                    municipio = Municipio(
                         estado=estado,
-                        nombre=safe_string(row["D_mnpio"]),
+                        nombre=municipio_str,
                     )
-                )
-                acumulados.append(nombre)
-                contador += 1
+                    db.add(municipio)
+                    contador += 1
         db.commit()
     click.echo(f"  {contador} municipios alimentados.")

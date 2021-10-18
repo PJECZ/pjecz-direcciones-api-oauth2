@@ -25,20 +25,23 @@ def alimentar_codigos_postales(db: Session):
         return
     click.echo("Alimentando codigos postales...")
     contador = 0
+    municipio = None
+    codigo_postal = None
     with open(ruta, encoding="iso8859-1") as puntero:
         rows = csv.DictReader(puntero, delimiter="|")
-        acumulados = []
         for row in rows:
-            cp = safe_string(row["d_codigo"])
-            municipio = db.query(Municipio).filter_by(nombre=safe_string(row["D_mnpio"])).first()
-            if cp not in acumulados:
-                db.add(
-                    CodigoPostal(
+            municipio_str = safe_string(row["D_mnpio"])
+            if municipio is None or municipio_str != municipio.nombre:
+                municipio = db.query(Municipio).filter_by(nombre=municipio_str).first()
+            cp_str = safe_string(row["d_codigo"])
+            if codigo_postal is None or cp_str != codigo_postal.cp:
+                codigo_postal = db.query(CodigoPostal).filter_by(cp=cp_str).first()
+                if codigo_postal is None:
+                    codigo_postal = CodigoPostal(
                         municipio=municipio,
-                        cp=cp,
+                        cp=cp_str,
                     )
-                )
-                acumulados.append(cp)
-                contador += 1
+                    db.add(codigo_postal)
+                    contador += 1
         db.commit()
     click.echo(f"  {contador} codigos postales alimentados.")
