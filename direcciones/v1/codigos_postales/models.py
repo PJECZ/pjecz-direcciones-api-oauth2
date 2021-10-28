@@ -24,6 +24,11 @@ class CodigoPostal(Base, UniversalMixin):
     # Columnas
     cp = Column(String(5), unique=True, nullable=False)
 
+    @property
+    def municipio_nombre(self):
+        """Nombre del municipio"""
+        return self.municipio.nombre
+
     def __repr__(self):
         """ Representación """
         return f"<CodigoPostal {self.cp}>"

@@ -9,24 +9,29 @@ from lib.universal_mixin import UniversalMixin
 
 
 class Municipio(Base, UniversalMixin):
-    """ Municipio """
+    """Municipio"""
 
     # Nombre de la tabla
-    __tablename__ = 'municipios'
+    __tablename__ = "municipios"
 
     # Clave primaria
     id = Column(Integer, primary_key=True)
 
     # Clave foránea
-    estado_id = Column(Integer, ForeignKey('estados.id'), index=True, nullable=False)
-    estado = relationship('Estado', back_populates='municipios')
+    estado_id = Column(Integer, ForeignKey("estados.id"), index=True, nullable=False)
+    estado = relationship("Estado", back_populates="municipios")
 
     # Columnas
     nombre = Column(String(256), nullable=False)
 
     # Hijos
-    codigos_postales = relationship('CodigoPostal', back_populates='municipio')
+    codigos_postales = relationship("CodigoPostal", back_populates="municipio")
+
+    @property
+    def estado_nombre(self):
+        """Nombre del estado"""
+        return self.estado.nombre
 
     def __repr__(self):
-        """ Representación """
+        """Representación"""
         return f"<Municipio {self.nombre}>"
