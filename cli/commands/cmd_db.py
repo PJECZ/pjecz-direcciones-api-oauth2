@@ -15,6 +15,7 @@ from cli.commands.alimentar_usuarios import alimentar_usuarios
 from cli.commands.alimentar_estados import alimentar_estados
 from cli.commands.alimentar_municipios import alimentar_municipios
 from cli.commands.alimentar_codigos_postales import alimentar_codigos_postales
+from cli.commands.alimentar_colonias import alimentar_colonias
 
 entorno_implementacion = os.environ.get("DEPLOYMENT_ENVIRONMENT", "develop").upper()
 
@@ -47,6 +48,7 @@ def alimentar():
         alimentar_estados(db)
         alimentar_municipios(db)
         alimentar_codigos_postales(db)
+        alimentar_colonias(db)
     click.echo("Pendiente alimentar.")
 
 

@@ -12,6 +12,7 @@ from config.settings import ACCESS_TOKEN_EXPIRE_MINUTES
 from lib.database import get_db
 
 from direcciones.v1.codigos_postales.paths import codigos_postales
+from direcciones.v1.colonias.paths import colonias
 from direcciones.v1.estados.paths import estados
 from direcciones.v1.municipios.paths import municipios
 from direcciones.v1.roles.paths import roles
@@ -31,6 +32,7 @@ app.include_router(usuarios)
 app.include_router(estados)
 app.include_router(municipios)
 app.include_router(codigos_postales)
+app.include_router(colonias)
 
 add_pagination(app)
 
