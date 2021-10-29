@@ -21,13 +21,14 @@ codigos_postales = APIRouter(prefix="/v1/codigos_postales", tags=["códigos post
 @codigos_postales.get("", response_model=LimitOffsetPage[CodigoPostalOut])
 async def list_paginate(
     municipio_id: int = None,
+    cp: int = None,
     current_user: UsuarioInBD = Depends(get_current_active_user),
     db: Session = Depends(get_db),
 ):
     """Listado de codigos_postales"""
     if not current_user.permissions & Permiso.VER_CATALOGOS == Permiso.VER_CATALOGOS:
         raise HTTPException(status_code=403, detail="Forbidden")
-    return paginate(get_codigos_postales(db, municipio_id))
+    return paginate(get_codigos_postales(db, municipio_id, cp))
 
 
 @codigos_postales.get("/{codigo_postal_id}", response_model=CodigoPostalOut)

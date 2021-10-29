@@ -29,6 +29,26 @@ class Colonia(Base, UniversalMixin):
         """Codigo Postal"""
         return self.codigo_postal.cp
 
+    @property
+    def municipio_id(self):
+        """ID del municipio"""
+        return self.codigo_postal.municipio_id
+
+    @property
+    def municipio_nombre(self):
+        """Nombre del municipio"""
+        return self.codigo_postal.municipio.nombre
+
+    @property
+    def estado_id(self):
+        """ID del estado"""
+        return self.codigo_postal.municipio.estado_id
+
+    @property
+    def estado_nombre(self):
+        """Nombre del estado"""
+        return self.codigo_postal.municipio.estado.nombre
+
     def __repr__(self):
         """Representación"""
         return f"<Colonia {self.nombre}>"

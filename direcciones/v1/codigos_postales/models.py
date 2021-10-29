@@ -32,6 +32,16 @@ class CodigoPostal(Base, UniversalMixin):
         """Nombre del municipio"""
         return self.municipio.nombre
 
+    @property
+    def estado_id(self):
+        """ID del estado"""
+        return self.municipio.estado_id
+
+    @property
+    def estado_nombre(self):
+        """Nombre del estado"""
+        return self.municipio.estado.nombre
+
     def __repr__(self):
         """Representación"""
         return f"<CodigoPostal {self.cp}>"

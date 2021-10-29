@@ -8,6 +8,8 @@ class CodigoPostalOut(BaseModel):
     """ Esquema para entregar codigo postal """
 
     id: int
+    estado_id: int
+    estado_nombre: str
     municipio_id: int
     municipio_nombre: str
     cp: int
