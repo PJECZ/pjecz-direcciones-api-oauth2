@@ -31,3 +31,13 @@ def get_codigo_postal(db: Session, codigo_postal_id: int) -> CodigoPostal:
     if codigo_postal.estatus != "A":
         raise IndexError("No es activo ese código postal, está eliminado")
     return codigo_postal
+
+
+def get_codigo_postal_cp(db: Session, codigo_postal_cp: int) -> CodigoPostal:
+    """Consultar un codigo_postal por su código postal"""
+    codigo_postal = db.query(CodigoPostal).filter_by(cp=codigo_postal_cp).first()
+    if codigo_postal is None:
+        raise IndexError("No existe ese código postal")
+    if codigo_postal.estatus != "A":
+        raise IndexError("No es activo ese código postal, está eliminado")
+    return codigo_postal

@@ -21,13 +21,14 @@ colonias = APIRouter(prefix="/v1/colonias", tags=["colonias"])
 @colonias.get("", response_model=LimitOffsetPage[ColoniaOut])
 async def list_paginate(
     codigo_postal_id: int = None,
+    codigo_postal_cp: int = None,
     current_user: UsuarioInBD = Depends(get_current_active_user),
     db: Session = Depends(get_db),
 ):
     """Listado de colonias"""
     if not current_user.permissions & Permiso.VER_CATALOGOS == Permiso.VER_CATALOGOS:
         raise HTTPException(status_code=403, detail="Forbidden")
-    return paginate(get_colonias(db, codigo_postal_id))
+    return paginate(get_colonias(db, codigo_postal_id, codigo_postal_cp))
 
 
 @colonias.get("/{colonia_id}", response_model=ColoniaOut)

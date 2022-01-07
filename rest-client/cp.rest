@@ -1,0 +1,17 @@
+@root = http://localhost:8004
+@api = {{root}}/v1
+
+### Mensaje de bienvenida
+GET {{root}}
+
+### Solicitar token
+POST {{root}}/token
+Content-Type: application/xml
+Authorization: token beaver
+
+<request>
+    <username>guillermo.valdes@pjecz.gob.mx</username>
+    <password>BadPassword</password>
+</request>
+
+### Solicitar las colonias de un código postal
