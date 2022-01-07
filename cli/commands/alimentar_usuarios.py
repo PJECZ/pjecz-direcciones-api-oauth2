@@ -6,10 +6,12 @@ import csv
 
 import click
 from sqlalchemy.orm import Session
-from lib.pwgen import generar_contrasena
+from passlib.context import CryptContext
 
 from direcciones.v1.roles.models import Rol
 from direcciones.v1.usuarios.models import Usuario
+
+pwd_context = CryptContext(schemes=["pbkdf2_sha256", "des_crypt"], deprecated="auto")
 
 USUARIOS_CSV = "seed/usuarios.csv"
 
@@ -37,7 +39,7 @@ def alimentar_usuarios(db: Session):
                     apellido_paterno=row["apellido_paterno"],
                     apellido_materno=row["apellido_materno"],
                     estatus=row["estatus"],
-                    contrasena=generar_contrasena(),
+                    contrasena=pwd_context.hash(row["contrasena"]),
                 )
             )
             contador += 1

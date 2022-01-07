@@ -43,5 +43,7 @@ def alimentar_codigos_postales(db: Session):
                     )
                     db.add(codigo_postal)
                     contador += 1
+            if contador % 100 == 0:
+                click.echo(f"  Van {contador} codigos postales...")
         db.commit()
     click.echo(f"  {contador} codigos postales alimentados.")

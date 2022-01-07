@@ -47,5 +47,7 @@ def alimentar_municipios(db: Session):
                     )
                     db.add(municipio)
                     contador += 1
+            if contador % 100 == 0:
+                click.echo(f"  Van {contador} municipios...")
         db.commit()
     click.echo(f"  {contador} municipios alimentados.")

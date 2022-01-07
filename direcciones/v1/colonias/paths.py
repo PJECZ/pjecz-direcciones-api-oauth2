@@ -1,5 +1,5 @@
 """
-Estados v1, rutas (paths)
+Colonias v1, rutas (paths)
 """
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_pagination.ext.sqlalchemy import paginate
@@ -12,36 +12,38 @@ from direcciones.v1.roles.models import Permiso
 from direcciones.v1.usuarios.authentications import get_current_active_user
 from direcciones.v1.usuarios.schemas import UsuarioInBD
 
-from direcciones.v1.estados.crud import get_estados, get_estado
-from direcciones.v1.estados.schemas import EstadoOut
+from direcciones.v1.colonias.crud import get_colonias, get_colonia
+from direcciones.v1.colonias.schemas import ColoniaOut
 
-estados = APIRouter(prefix="/v1/estados", tags=["estados"])
+colonias = APIRouter(prefix="/v1/colonias", tags=["colonias"])
 
 
-@estados.get("", response_model=LimitOffsetPage[EstadoOut])
+@colonias.get("", response_model=LimitOffsetPage[ColoniaOut])
 async def list_paginate(
+    codigo_postal_id: int = None,
+    codigo_postal_cp: int = None,
     current_user: UsuarioInBD = Depends(get_current_active_user),
     db: Session = Depends(get_db),
 ):
-    """Listado de estados"""
+    """Listado de colonias"""
     if not current_user.permissions & Permiso.VER_CATALOGOS == Permiso.VER_CATALOGOS:
         raise HTTPException(status_code=403, detail="Forbidden")
-    return paginate(get_estados(db))
+    return paginate(get_colonias(db, codigo_postal_id, codigo_postal_cp))
 
 
-@estados.get("/{estado_id}", response_model=EstadoOut)
+@colonias.get("/{colonia_id}", response_model=ColoniaOut)
 async def detail(
-    estado_id: int,
+    colonia_id: int,
     current_user: UsuarioInBD = Depends(get_current_active_user),
     db: Session = Depends(get_db),
 ):
-    """Detalle de una estado a partir de su id"""
+    """Detalle de una colonia a partir de su id"""
     if not current_user.permissions & Permiso.VER_CATALOGOS == Permiso.VER_CATALOGOS:
         raise HTTPException(status_code=403, detail="Forbidden")
     try:
-        estado = get_estado(db, estado_id)
+        colonia = get_colonia(db, colonia_id)
     except IndexError as error:
         raise HTTPException(status_code=404, detail=f"Not found: {str(error)}") from error
     except ValueError as error:
         raise HTTPException(status_code=406, detail=f"Not acceptable: {str(error)}") from error
-    return EstadoOut.from_orm(estado)
+    return ColoniaOut.from_orm(colonia)

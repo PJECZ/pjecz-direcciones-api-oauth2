@@ -1,5 +1,5 @@
 """
-Estados v1, rutas (paths)
+Municipios v1, rutas (paths)
 """
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_pagination.ext.sqlalchemy import paginate
@@ -12,36 +12,37 @@ from direcciones.v1.roles.models import Permiso
 from direcciones.v1.usuarios.authentications import get_current_active_user
 from direcciones.v1.usuarios.schemas import UsuarioInBD
 
-from direcciones.v1.estados.crud import get_estados, get_estado
-from direcciones.v1.estados.schemas import EstadoOut
+from direcciones.v1.municipios.crud import get_municipios, get_municipio
+from direcciones.v1.municipios.schemas import MunicipioOut
 
-estados = APIRouter(prefix="/v1/estados", tags=["estados"])
+municipios = APIRouter(prefix="/v1/municipios", tags=["municipios"])
 
 
-@estados.get("", response_model=LimitOffsetPage[EstadoOut])
+@municipios.get("", response_model=LimitOffsetPage[MunicipioOut])
 async def list_paginate(
+    estado_id: int = None,
     current_user: UsuarioInBD = Depends(get_current_active_user),
     db: Session = Depends(get_db),
 ):
-    """Listado de estados"""
+    """Listado de municipios"""
     if not current_user.permissions & Permiso.VER_CATALOGOS == Permiso.VER_CATALOGOS:
         raise HTTPException(status_code=403, detail="Forbidden")
-    return paginate(get_estados(db))
+    return paginate(get_municipios(db, estado_id))
 
 
-@estados.get("/{estado_id}", response_model=EstadoOut)
+@municipios.get("/{municipio_id}", response_model=MunicipioOut)
 async def detail(
-    estado_id: int,
+    municipio_id: int,
     current_user: UsuarioInBD = Depends(get_current_active_user),
     db: Session = Depends(get_db),
 ):
-    """Detalle de una estado a partir de su id"""
+    """Detalle de una municipio a partir de su id"""
     if not current_user.permissions & Permiso.VER_CATALOGOS == Permiso.VER_CATALOGOS:
         raise HTTPException(status_code=403, detail="Forbidden")
     try:
-        estado = get_estado(db, estado_id)
+        municipio = get_municipio(db, municipio_id)
     except IndexError as error:
         raise HTTPException(status_code=404, detail=f"Not found: {str(error)}") from error
     except ValueError as error:
         raise HTTPException(status_code=406, detail=f"Not acceptable: {str(error)}") from error
-    return EstadoOut.from_orm(estado)
+    return MunicipioOut.from_orm(municipio)
